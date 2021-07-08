@@ -48,15 +48,23 @@ Stanford Cars: https://github.com/cyizhuo/Stanford-Cars-dataset
 
 ## Python env requirements
 
-numpy, tqdm, pytorch, torchvision
+numpy
+
+tqdm
+
+pytorch
+
+torchvision
 
 P.S. torch.cuda.amp requires pytorch ≥ 1.6
 
 **my env:**
 
-python == 3.8.10, pytorch == 1.8.1, numpy == 1.20.2
+python == 3.8.10
 
+pytorch == 1.8.1
 
+numpy == 1.20.2
 
 
 
@@ -74,4 +82,16 @@ Full parameters:
 ```python
 python train.py -d dataset_dir -b batch_size -g gpu_id -w num_workers -s seed -a amp -n note
 ```
+
+
+
+## Tricks
+
+Label Smoothing
+
+Cosine Learning Rate Decay
+
+**A good paper about tricks:**
+
+Bag of Tricks for Image Classification with Convolutional Neural Networks
 
