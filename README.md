@@ -1,6 +1,6 @@
 # Fine-grained Image Classification via Pytorch
 
-Simple code based on Pytorch pre-trained Resnet50.
+Simple code based on Pytorch pre-trained **Resnet50**.
 
 You can alse use any other Resnet, Densenet, VGG models by changing only a few lines of code.
 
@@ -35,7 +35,7 @@ data
 └ ─ dataset_dir1
 ```
 
-For collated dataset, see:
+For **collated dataset**, see:
 
 CUB-200-2011: https://github.com/cyizhuo/CUB-200-2011-dataset
 
