@@ -21,17 +21,18 @@ You can alse use any other Resnet, Densenet, VGG models by changing only a few l
 ## Data preparation
 ```python
 data
-├─ cars
+├─ dataset_dir0
 │	├─ train
-│	│	├─ class1
-│	│	│	├─ img1
-│	│	│	└─ img2
-│	│	└─ class2
+│	│	├─ class0
+│	│	│	├─ img0
+│	│	│	└─ img1
+│	│	└─ class1
 │	└─ test
-│		├─ class1
-│		└─ class2
-├─ cub
-└─ fgvc
+│		├─ class0
+│		│	├─ img0
+│		│	└─ img1
+│		└─ class1
+└─ dataset_dir1
 ```
 
 For collated dataset, see:
