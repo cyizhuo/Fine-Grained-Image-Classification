@@ -1,3 +1,0 @@
-# Fine-Grained-Image-Classification
-
-Uploading……
