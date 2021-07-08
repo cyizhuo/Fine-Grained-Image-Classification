@@ -37,7 +37,9 @@ data
 For collated dataset, see:
 
 CUB-200-2011: https://github.com/cyizhuo/CUB-200-2011-dataset
+
 FGVC Aircraft: https://github.com/cyizhuo/FGVC-Aircraft-dataset
+
 Stanford Cars: https://github.com/cyizhuo/Stanford-Cars-dataset
 
 
