@@ -1,7 +1,6 @@
 # Fine-grained Image Classification via Pytorch
 
 Simple code based on Pytorch pre-trained Resnet50.
-
 You can alse use any other Resnet, Densenet, VGG models by changing only a few lines of code.
 
 
