@@ -1,7 +1,9 @@
 # Fine-grained Image Classification via Pytorch
 
 Simple code based on Pytorch pre-trained Resnet50.
+
 You can alse use any other Resnet, Densenet, VGG models by changing only a few lines of code.
+
 
 
 
@@ -12,6 +14,7 @@ You can alse use any other Resnet, Densenet, VGG models by changing only a few l
 | [CUB-200-2011](https://github.com/cyizhuo/CUB-200-2011-dataset) | **86.74** | 86.68                                         | 86.59                                                        | [91.7](https://paperswithcode.com/sota/fine-grained-image-classification-on-cub-200) |
 | [FGVC Aircraft](https://github.com/cyizhuo/FGVC-Aircraft-dataset) | 93.25     | **93.58**                                     | 92.86                                                        | [94.7](https://paperswithcode.com/sota/fine-grained-image-classification-on-fgvc) |
 | [Stanford Cars](https://github.com/cyizhuo/Stanford-Cars-dataset) | 94.09     | 94.30                                         | **94.32**                                                    | [96.32](https://paperswithcode.com/sota/fine-grained-image-classification-on-stanford) |
+
 
 
 
@@ -39,6 +42,7 @@ Stanford Cars: https://github.com/cyizhuo/Stanford-Cars-dataset
 
 
 
+
 ## Python env requirements
 
 numpy, tqdm, pytorch, torchvision
@@ -48,6 +52,7 @@ P.S. torch.cuda.amp requires pytorch ≥ 1.6
 **my env:**
 
 python == 3.8.10, pytorch == 1.8.1, numpy == 1.20.2
+
 
 
 
