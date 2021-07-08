@@ -114,7 +114,6 @@ net = resnet50(
 net.fc = nn.Linear(
     net.fc.in_features, nb_class
 )  # set fc layer of model with exact class number of current dataset
-# net.classifier = nn.Linear(net.classifier.in_features, nb_class)  # for densenet only
 
 for param in net.parameters():
     param.requires_grad = True  # make parameters in model learnable
