@@ -22,12 +22,12 @@ You can alse use any other Resnet, Densenet, VGG models by changing only a few l
 ```python
 data
 ├─ dataset_dir0
-│	├─ train
+│	├── train
 │	│	├─ class0
 │	│	│	├─ img0
 │	│	│	└─ img1
 │	│	└─ class1
-│	└─ test
+│	└── test
 │		├─ class0
 │		│	├─ img0
 │		│	└─ img1
