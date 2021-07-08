@@ -1,4 +1,3 @@
-
 import argparse
 import os
 import random
@@ -16,6 +15,7 @@ from tqdm import tqdm
 
 from LabelSmoothing import LabelSmoothingLoss
 
+
 #######################
 ##### 1 - Setting #####
 #######################
@@ -24,11 +24,23 @@ from LabelSmoothing import LabelSmoothingLoss
 parser = argparse.ArgumentParser()
 parser.add_argument('-d', '--dir', default='fgvc', help='dataset dir')
 parser.add_argument('-b', '--batch_size', default=64, help='batch_size')
-parser.add_argument('-g', '--gpu', default='0', help='example: 0 or 1, to use different gpu')
+parser.add_argument(
+    '-g', '--gpu', default='0', help='example: 0 or 1, to use different gpu'
+)
 parser.add_argument('-w', '--num_workers', default=12, help='num_workers of dataloader')
 parser.add_argument('-s', '--seed', default=2020, help='random seed')
-parser.add_argument('-n', '--note', default='', help='exp note, append after exp folder, fgvc(_r50) for example')
-parser.add_argument('-a', '--amp', default=0, help='0: w/o amp, 1: w/ nvidia apex.amp, 2: w/ torch.cuda.amp')
+parser.add_argument(
+    '-n',
+    '--note',
+    default='',
+    help='exp note, append after exp folder, fgvc(_r50) for example',
+)
+parser.add_argument(
+    '-a',
+    '--amp',
+    default=0,
+    help='0: w/o amp, 1: w/ nvidia apex.amp, 2: w/ torch.cuda.amp',
+)
 args = parser.parse_args()
 
 
@@ -45,7 +57,9 @@ use_amp = int(args.amp)  # use amp to accelerate training
 ##### data settings
 data_dir = join('data', datasets_dir)
 data_sets = ['train', 'test']
-nb_class = len(os.listdir(join(data_dir, data_sets[0])))  # get number of class via img folders automatically
+nb_class = len(
+    os.listdir(join(data_dir, data_sets[0]))
+)  # get number of class via img folders automatically
 exp_dir = 'result/{}{}'.format(datasets_dir, args.note)  # the folder to save model
 
 
@@ -69,23 +83,37 @@ torch.backends.cudnn.benchmark = False
 re_size = 512
 crop_size = 448
 
-train_transform = transforms.Compose([transforms.Resize((re_size, re_size)),
-                                      transforms.RandomCrop(crop_size, padding=8),
-                                      transforms.RandomHorizontalFlip(),
-                                      transforms.ToTensor(),
-                                      transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))])
-test_transform = transforms.Compose([transforms.Resize((re_size, re_size)),
-                                     transforms.CenterCrop(crop_size),
-                                     transforms.ToTensor(),
-                                     transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))])
+train_transform = transforms.Compose(
+    [
+        transforms.Resize((re_size, re_size)),
+        transforms.RandomCrop(crop_size, padding=8),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
+    ]
+)
+test_transform = transforms.Compose(
+    [
+        transforms.Resize((re_size, re_size)),
+        transforms.CenterCrop(crop_size),
+        transforms.ToTensor(),
+        transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
+    ]
+)
 
 train_set = ImageFolder(root=join(data_dir, data_sets[0]), transform=train_transform)
-train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+train_loader = DataLoader(
+    train_set, batch_size=batch_size, shuffle=True, num_workers=num_workers
+)
 
 
 ##### Model settings
-net = resnet50(pretrained=True)  # to use more models, see https://pytorch.org/vision/stable/models.html
-net.fc = nn.Linear(net.fc.in_features, nb_class)  # set fc layer of model with exact class number of current dataset
+net = resnet50(
+    pretrained=True
+)  # to use more models, see https://pytorch.org/vision/stable/models.html
+net.fc = nn.Linear(
+    net.fc.in_features, nb_class
+)  # set fc layer of model with exact class number of current dataset
 # net.classifier = nn.Linear(net.classifier.in_features, nb_class)  # for densenet only
 
 for param in net.parameters():
@@ -93,8 +121,12 @@ for param in net.parameters():
 
 
 ##### optimizer setting
-LSLoss = LabelSmoothingLoss(classes=nb_class, smoothing=0.1)  # label smoothing to improve performance
-optimizer = torch.optim.SGD(net.parameters(), lr=lr_begin, momentum=0.9, weight_decay=5e-4)
+LSLoss = LabelSmoothingLoss(
+    classes=nb_class, smoothing=0.1
+)  # label smoothing to improve performance
+optimizer = torch.optim.SGD(
+    net.parameters(), lr=lr_begin, momentum=0.9, weight_decay=5e-4
+)
 scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=128)
 
 
@@ -143,7 +175,8 @@ for epoch in range(nb_epoch):
     for batch_idx, (inputs, targets) in enumerate(tqdm(train_loader, ncols=80)):
         idx = batch_idx
 
-        if inputs.shape[0] < batch_size: continue
+        if inputs.shape[0] < batch_size:
+            continue
 
         optimizer.zero_grad()  # Sets the gradients to zero
         inputs, targets = inputs.cuda(), targets.cuda()
@@ -177,14 +210,21 @@ for epoch in range(nb_epoch):
 
     train_acc = 100.0 * float(train_correct) / train_total
     train_loss = train_loss / (idx + 1)
-    print('Train | lr: {:.4f} | Loss: {:.4f} | Acc: {:.3f}% ({}/{})'.format(
-        lr_now, train_loss, train_acc, train_correct, train_total))
+    print(
+        'Train | lr: {:.4f} | Loss: {:.4f} | Acc: {:.3f}% ({}/{})'.format(
+            lr_now, train_loss, train_acc, train_correct, train_total
+        )
+    )
 
     ##### Evaluating model with test data every epoch
     with torch.no_grad():
         net.eval()  # set model to eval mode, disable Batch Normalization and Dropout
-        eval_set = ImageFolder(root=join(data_dir, data_sets[-1]), transform=test_transform)
-        eval_loader = DataLoader(eval_set, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+        eval_set = ImageFolder(
+            root=join(data_dir, data_sets[-1]), transform=test_transform
+        )
+        eval_loader = DataLoader(
+            eval_set, batch_size=batch_size, shuffle=False, num_workers=num_workers
+        )
         eval_correct = eval_total = 0
         for _, (inputs, targets) in enumerate(tqdm(eval_loader, ncols=80)):
             inputs, targets = inputs.cuda(), targets.cuda()
@@ -193,16 +233,28 @@ for epoch in range(nb_epoch):
             eval_total += targets.size(0)
             eval_correct += predicted.eq(targets.data).cpu().sum()
         eval_acc = 100.0 * float(eval_correct) / eval_total
-        print('{} | Acc: {:.3f}% ({}/{})'.format(data_sets[-1], eval_acc, eval_correct, eval_total))
+        print(
+            '{} | Acc: {:.3f}% ({}/{})'.format(
+                data_sets[-1], eval_acc, eval_correct, eval_total
+            )
+        )
 
         ##### Logging
         with open(os.path.join(exp_dir, 'train_log.csv'), 'a+') as file:
-            file.write('{}, {:.4f}, {:.4f}, {:.3f}%, {:.3f}%\n'.format(epoch, lr_now, train_loss, train_acc, eval_acc))
+            file.write(
+                '{}, {:.4f}, {:.4f}, {:.3f}%, {:.3f}%\n'.format(
+                    epoch, lr_now, train_loss, train_acc, eval_acc
+                )
+            )
 
         ##### save model with highest acc
         if eval_acc > max_eval_acc:
             max_eval_acc = eval_acc
-            torch.save(net.state_dict(), os.path.join(exp_dir, 'max_acc.pth'), _use_new_zipfile_serialization=False)
+            torch.save(
+                net.state_dict(),
+                os.path.join(exp_dir, 'max_acc.pth'),
+                _use_new_zipfile_serialization=False,
+            )
 
 
 ########################
@@ -218,8 +270,12 @@ net.load_state_dict(torch.load(join(exp_dir, 'max_acc.pth')))
 net.eval()  # set model to eval mode, disable Batch Normalization and Dropout
 
 for data_set in data_sets:
-    testset = ImageFolder(root=os.path.join(data_dir, data_set), transform=test_transform)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+    testset = ImageFolder(
+        root=os.path.join(data_dir, data_set), transform=test_transform
+    )
+    testloader = torch.utils.data.DataLoader(
+        testset, batch_size=batch_size, shuffle=False, num_workers=num_workers
+    )
 
     test_loss = correct = total = 0
     with torch.no_grad():
@@ -236,6 +292,8 @@ for data_set in data_sets:
     with open(os.path.join(exp_dir, 'train_log.csv'), 'a+') as file:
         file.write('Dataset {}\tACC:{:.2f}\n'.format(data_set, test_acc))
 
-    with open(os.path.join(exp_dir, 'acc_{}_{:.2f}'.format(data_set, test_acc)), 'a+') as file:
+    with open(
+        os.path.join(exp_dir, 'acc_{}_{:.2f}'.format(data_set, test_acc)), 'a+'
+    ) as file:
         # save accuracy as file name
         pass
